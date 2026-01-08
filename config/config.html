@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Tracker Settings</title>
+  <link rel="stylesheet" href="config.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📋 Job Tracker Settings</h1>
+    <p class="subtitle">Configure your extension in just a few steps!</p>
+
+    <form id="config-form">
+      <!-- Step 1: Gemini API Key -->
+      <div class="form-section">
+        <h2>Step 1: Google Gemini API Key</h2>
+        <p class="help-text">
+          Get your free API key from 
+          <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>
+        </p>
+        <div class="form-group">
+          <label for="gemini-key">Gemini API Key</label>
+          <input type="password" id="gemini-key" placeholder="AIza..." required>
+          <button type="button" id="toggle-key" class="btn-icon-only">👁️</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Google Sheet Setup -->
+      <div class="form-section">
+        <h2>Step 2: Google Sheet Setup</h2>
+        <p class="help-text">
+          Create a Google Sheet and set up the Apps Script webhook. 
+          <a href="#" id="show-instructions">Show detailed instructions</a>
+        </p>
+        
+        <div id="instructions" class="instructions" style="display: none;">
+          <h3>📝 How to set up your Google Sheet:</h3>
+          <ol>
+            <li>Create a new Google Sheet</li>
+            <li>Add these headers in Row 1:
+              <code>Date Applied | Company | Job Title | Position Type | Location | Salary | Schedule | Experience | URL | Status | Notes</code>
+            </li>
+            <li>Go to <strong>Extensions → Apps Script</strong></li>
+            <li>Delete any existing code and paste this:
+              <pre id="apps-script-code">function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+  
+  sheet.appendRow([
+    data.dateApplied,
+    data.company,
+    data.jobTitle,
+    data.positionType,
+    data.location,
+    data.salary,
+    data.schedule,
+    data.experienceLevel,
+    data.url,
+    data.status,
+    data.description
+  ]);
+  
+  return ContentService
+    .createTextOutput(JSON.stringify({success: true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  return ContentService
+    .createTextOutput(JSON.stringify({status: 'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+              <button type="button" id="copy-script" class="btn btn-small">📋 Copy Code</button>
+            </li>
+            <li>Click <strong>Deploy → New deployment</strong></li>
+            <li>Select type: <strong>Web app</strong></li>
+            <li>Set "Who has access" to: <strong>Anyone</strong></li>
+            <li>Click <strong>Deploy</strong> and copy the Web app URL</li>
+          </ol>
+        </div>
+
+        <div class="form-group">
+          <label for="webhook-url">Apps Script Webhook URL</label>
+          <input type="url" id="webhook-url" placeholder="https://script.google.com/macros/s/..." required>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" id="test-btn" class="btn btn-secondary">🧪 Test Connection</button>
+        <button type="submit" id="save-btn" class="btn btn-primary">💾 Save Settings</button>
+      </div>
+
+      <div id="status" class="status"></div>
+    </form>
+  </div>
+
+  <script src="config.js"></script>
+</body>
+</html>

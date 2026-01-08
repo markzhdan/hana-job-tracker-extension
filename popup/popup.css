@@ -1,0 +1,167 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  width: 320px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 200px;
+}
+
+.container {
+  padding: 20px;
+}
+
+h1 {
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: white;
+  color: #667eea;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  margin-top: 10px;
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+.status {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  display: none;
+}
+
+.status.loading {
+  display: block;
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.status.success {
+  display: block;
+  background: #4ade80;
+  color: #166534;
+}
+
+.status.error {
+  display: block;
+  background: #fca5a5;
+  color: #991b1b;
+}
+
+.message {
+  background: rgba(255,255,255,0.95);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.message.warning p {
+  color: #92400e;
+  margin-bottom: 10px;
+}
+
+.preview {
+  margin-top: 15px;
+  background: rgba(255,255,255,0.95);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.preview h3 {
+  color: #667eea;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.preview-item {
+  display: flex;
+  margin-bottom: 4px;
+}
+
+.preview-label {
+  font-weight: 600;
+  color: #374151;
+  min-width: 80px;
+}
+
+.preview-value {
+  color: #6b7280;
+  word-break: break-word;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.footer a {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.footer a:hover {
+  color: white;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
