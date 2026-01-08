@@ -1,13 +1,60 @@
 // Background service worker - handles API calls and data processing
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.action === 'processJob') {
+    // Immediately respond so popup can close
+    sendResponse({ received: true });
+    
+    // Process in background
     processJobPosting(request.pageData)
-      .then(result => sendResponse(result))
-      .catch(error => sendResponse({ success: false, error: error.message }));
-    return true; // Keep message channel open for async response
+      .then(result => {
+        showNotification(result.success, result.data, result.error);
+      })
+      .catch(error => {
+        showNotification(false, null, error.message);
+      });
+    
+    return false; // Don't keep channel open
   }
 });
+
+// Show Chrome notification
+function showNotification(success, data, error) {
+  const title = success ? 'Job Saved!' : 'Error';
+  const message = success 
+    ? `${data?.jobTitle || 'Job'} at ${data?.company || 'Unknown'}`
+    : error || 'Failed to save job';
+  
+  // Set badge on extension icon (always works)
+  if (success) {
+    chrome.action.setBadgeText({ text: '✓' });
+    chrome.action.setBadgeBackgroundColor({ color: '#22c55e' });
+  } else {
+    chrome.action.setBadgeText({ text: '!' });
+    chrome.action.setBadgeBackgroundColor({ color: '#ef4444' });
+  }
+  
+  // Clear badge after 3 seconds
+  setTimeout(() => {
+    chrome.action.setBadgeText({ text: '' });
+  }, 3000);
+  
+  // Try system notification as well
+  try {
+    chrome.notifications.create(`job-tracker-${Date.now()}`, {
+      type: 'basic',
+      iconUrl: 'icons/icon128.png',
+      title: title,
+      message: message
+    }, (notificationId) => {
+      if (chrome.runtime.lastError) {
+        console.log('Notification fallback to badge only:', chrome.runtime.lastError.message);
+      }
+    });
+  } catch (e) {
+    console.log('Notifications not available, using badge only');
+  }
+}
 
 // Main processing function
 async function processJobPosting(pageData) {
@@ -75,7 +122,7 @@ Remember: Return ONLY the JSON object, nothing else.`;
       }],
       generationConfig: {
         temperature: 0.1,
-        maxOutputTokens: 1024
+        maxOutputTokens: 2048
       }
     })
   });
@@ -105,7 +152,7 @@ Remember: Return ONLY the JSON object, nothing else.`;
       company: 'Unknown',
       jobTitle: pageData.title || 'Unknown',
       positionType: 'Unknown',
-      location: 'Unknown',
+      location: 'Seattle, Washington',
       salary: null,
       schedule: null,
       experienceLevel: null,
@@ -121,12 +168,12 @@ async function saveToGoogleSheet(jobData, webhookUrl) {
     company: jobData.company || 'Unknown',
     jobTitle: jobData.jobTitle || 'Unknown',
     positionType: jobData.positionType || 'Unknown',
-    location: jobData.location || 'Unknown',
+    location: jobData.location || 'Seattle, Washington',
     salary: jobData.salary || 'Not Listed',
     schedule: jobData.schedule || 'Not Listed',
     experienceLevel: jobData.experienceLevel || 'Not Listed',
     url: jobData.url || '',
-    status: 'Applied',
+    status: 'Not Applied',
     description: jobData.description || ''
   };
 

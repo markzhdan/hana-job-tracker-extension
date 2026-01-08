@@ -83,25 +83,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       showStatus('Analyzing with AI...', 'loading');
 
       // Send to background script for processing
-      const result = await chrome.runtime.sendMessage({
+      chrome.runtime.sendMessage({
         action: 'processJob',
         pageData: pageData
       });
 
-      if (result.success) {
-        showStatus('✓ Job saved to Google Sheet!', 'success');
-        showPreview(result.data);
-        
-        // Auto-close after 3 seconds
-        setTimeout(() => {
-          window.close();
-        }, 3000);
-      } else {
-        showStatus(`Error: ${result.error}`, 'error');
-      }
+      showStatus('✓ Sent! Processing in background...', 'success');
+      
+      // Close popup quickly - background will show notification when done
+      setTimeout(() => {
+        window.close();
+      }, 500);
     } catch (error) {
       showStatus(`Error: ${error.message}`, 'error');
-    } finally {
       captureBtn.disabled = false;
     }
   });
