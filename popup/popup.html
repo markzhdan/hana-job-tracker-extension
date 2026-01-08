@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Tracker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📋 Job Tracker</h1>
+    
+    <div id="not-configured" class="message warning" style="display: none;">
+      <p>Please configure the extension first!</p>
+      <button id="open-settings" class="btn btn-secondary">Open Settings</button>
+    </div>
+    
+    <div id="main-content">
+      <button id="capture-btn" class="btn btn-primary">
+        <span class="btn-icon">📥</span>
+        Capture This Job
+      </button>
+      
+      <div id="status" class="status"></div>
+      
+      <div id="preview" class="preview" style="display: none;">
+        <h3>Extracted Data:</h3>
+        <div id="preview-content"></div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <a href="#" id="settings-link">⚙️ Settings</a>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
