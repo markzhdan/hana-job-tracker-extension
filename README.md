@@ -81,7 +81,7 @@ function doGet(e) {
 ## Usage
 1. Browse to any job posting page
 2. Click the extension icon in your toolbar
-3. Click **"Capture This Job"**
+3. Click **"Save Job"**
 4. Done! Check your Google Sheet
 
 ## Troubleshooting
